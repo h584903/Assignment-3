@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.VisualBasic.Logging;
 
 namespace Assignment_3
 {
@@ -50,6 +51,7 @@ namespace Assignment_3
 
             InitializeComponent();
         }
+        // Viser alle studiene
         private void courseButton_Click(object sender, RoutedEventArgs e)
         {
             var t = from courses in Courses
@@ -62,7 +64,7 @@ namespace Assignment_3
                     };
             studentView.ItemsSource = t;
         }
-
+        // Viser alle studentene med en F
         private void failButton_Click(object sender, RoutedEventArgs e)
         {
             var t = from stud in Students
@@ -95,8 +97,8 @@ namespace Assignment_3
             studentView.ItemsSource = t;
         }
 
-
-        // Viser alle studenter
+         
+        // Vise alle studentene på et studie
         private void studentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var c = studentView.SelectedItem;
@@ -113,6 +115,7 @@ namespace Assignment_3
             }
         }
 
+        // sorterer studentene etter karakter
         private void gradeList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int value = gradeList.SelectedIndex;
@@ -198,6 +201,73 @@ namespace Assignment_3
                     break;
             }
 
+        }
+
+        // enkel metode for å oppdatere viewet
+        private void refreshView()
+        {
+            var t = from stud in Students
+                    join grade in Grades on stud.Id equals grade.Studentid
+                    join c in Courses on grade.Coursecode equals c.Coursecode
+                    select new
+                    {
+                        Grade = grade.Grade1,
+                        Course = c.Coursename,
+                        Student = stud.Studentname,
+                    };
+            studentView.ItemsSource = t;
+        }
+
+        // Fjerner en karakter fra databasen
+        private void removeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Remove button clicked");
+            Console.WriteLine(studentView.SelectedItem);
+
+            if (studentView.SelectedItem is Grade selectedGrade)
+            {
+                dx.Grades.Remove(selectedGrade);
+                dx.SaveChanges();
+            }
+            var c = studentView.SelectedItem;
+            if (c != null && c.GetType().GetProperty("Grade") != null)
+            {
+                try
+                {
+                    System.Type type = c.GetType();
+                    string coursename = (string)type.GetProperty("Course").GetValue(c, null);
+                    string student = (string)type.GetProperty("Student").GetValue(c, null);
+                    string grade = (string)type.GetProperty("Grade").GetValue(c, null);
+
+                    // Finner graden som tilsvarer verdiene i c
+                    Grade g = dx.Grades.Where(g => g.Student.Studentname == student && g.Grade1 == grade).First();
+
+                    if (g != null)
+                    {
+                        dx.Grades.Remove(g);
+                        dx.SaveChanges();
+                        MessageBox.Show("Grade removed successfully.");
+                        refreshView();
+
+                        gradeList.SelectedIndex = 0;
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;  
+                }
+            }
+        }
+
+        // Legger til en ny karakter
+        private void addButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddStudentDialog dialog = new AddStudentDialog(dx);
+            if (dialog.ShowDialog() == true)
+            {
+                refreshView();
+            }
         }
     }
 }

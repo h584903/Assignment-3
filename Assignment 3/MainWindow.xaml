@@ -6,12 +6,12 @@
         xmlns:local="clr-namespace:Assignment_3"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Height="418" VerticalAlignment="Top" Width="515">
+    <Grid Height="418" VerticalAlignment="Top" Margin="142,0,74,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="45*"/>
             <RowDefinition Height="373*"/>
         </Grid.RowDefinitions>
-        <DataGrid Name="studentView" Margin="0,10,0,0" Grid.Row="1" FrozenColumnCount="1" SelectionMode="Single" SelectionChanged="studentView_SelectionChanged" />
+        <DataGrid Name="studentView" Margin="0,10,90,0" Grid.Row="1" FrozenColumnCount="1" SelectionMode="Single" SelectionChanged="studentView_SelectionChanged" />
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="363,12,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="textBox_TextChanged"/>
         <Button x:Name="failButton" Content="Failed" HorizontalAlignment="Left" Margin="95,12,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="failButton_Click"/>
         <Button x:Name="courseButton" Content="Courses" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="courseButton_Click"/>
@@ -24,5 +24,7 @@
             <ListBoxItem Content="D"/>
             <ListBoxItem Content="E"/>
         </ComboBox>
+        <Button x:Name="removeButton" Content="Remove" Margin="511,343,10,10" Grid.Row="1" Click="removeButton_Click" HorizontalAlignment="Right"/>
+        <Button x:Name="addButton" Content="Add" Margin="0,318,10,35" Grid.Row="1" Click="addButton_Click" HorizontalAlignment="Right" Width="46" Command="{Binding ActualWidth, ElementName=studentView, Mode=OneWay}"/>
     </Grid>
 </Window>
