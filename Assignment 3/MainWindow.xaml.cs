@@ -68,7 +68,7 @@ namespace Assignment_3
             var t = from stud in Students
                     join grad in Grades on stud.Id equals grad.Studentid
                     join c in Courses on grad.Coursecode equals c.Coursecode
-                    where grad.Grade1.Equals('F')
+                    where grad.Grade1 == ("F")
                     select new
                     {
                         Name = stud.Studentname,
@@ -78,6 +78,7 @@ namespace Assignment_3
             studentView.ItemsSource = t;
         }
 
+        // Søkefunksjon
         private void textBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -95,7 +96,7 @@ namespace Assignment_3
         }
 
 
-
+        // Viser alle studenter
         private void studentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var c = studentView.SelectedItem;
@@ -104,7 +105,7 @@ namespace Assignment_3
             {
                 System.Type type = c.GetType();
                 string coursename = (string)type.GetProperty("Course").GetValue(c, null);
-                Window1 win = new Window1(Courses, coursename)
+                Window1 win = new Window1(dx, coursename)
                 {
                     dx = dx
                 };

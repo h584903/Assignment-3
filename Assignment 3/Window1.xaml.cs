@@ -28,9 +28,15 @@ namespace Assignment_3
         public readonly LocalView<Grade> Grades;
 
         public readonly LocalView<Course> Courses;
-
+        private string? coursename;
 
         public Window1(LocalView<Course> cources, string c) {
+            
+        }
+
+        public Window1(Dat154Context dx, string c)
+        {
+            this.dx = dx;
             InitializeComponent();
 
             Grades = dx.Grades.Local;
@@ -38,15 +44,15 @@ namespace Assignment_3
             Students = dx.Students.Local;
 
             var t = from stud in Students
-            join grade in Grades on stud.Id equals grade.Studentid
-            join course in Courses on grade.Coursecode equals course.Coursecode
-            where course.Coursename.Equals(c)
-            select new
-            {
-                Grade = grade.Grade1,
-                Course = course.Coursename,
-                Student = stud.Studentname,
-            };
+                    join grade in Grades on stud.Id equals grade.Studentid
+                    join course in Courses on grade.Coursecode equals course.Coursecode
+                    where course.Coursename.Equals(c)
+                    select new
+                    {
+                        Grade = grade.Grade1,
+                        Course = course.Coursename,
+                        Student = stud.Studentname,
+                    };
             courseList.ItemsSource = t;
         }
     }
